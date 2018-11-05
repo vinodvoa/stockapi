@@ -11,35 +11,76 @@ import openpyxl as pyxl
 import urllib.request
 import json
 import time
+import datetime
 
 # ALPHAKEY = 'D9ZW4UF3RPMXif7H'
 QUANDLKEY = 'ahzB_xyURSjA4V7iHXtT'
 USSHEET = 'US Stocks'
 INSHEET = 'IN Stocks'
 CRYPTOSHEET = 'Crypto'
-SOURCE = '/Users/vinodverghese/Dropbox/Personal/Finance/Financial statement Master.xlsm'
-TARGET = '/Users/vinodverghese/Dropbox/Python/Financial statement Master.xlsx'
+SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx'
+BKUPDIR = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Backup'
+TARGET = '/Users/vinodverghese/Dropbox/Python/Learning/Completed/Stockapi/stockapi/Financial statement Master.xlsx'
 
-# backup file
+# check if source file exists
 if not (os.path.exists(SOURCE)):
     print('%s does not exist' % SOURCE)
     sys.exit(99)
+else:
+    print('File exists')
 
+# check if target file exists
+if not (os.path.exists(TARGET)):
+    print('%s does not exist' % TARGET)
+    sys.exit(99)
+else:
+    print('File exists')
+
+# split source path
+path, filename = os.path.split(SOURCE)
+# print(path)
+# print(filename)
+
+# split filename
+filewithoutext = os.path.splitext(filename)[0]
+# print(filewithoutext)
+
+# split file extension
+ext = os.path.splitext(filename)[1]
+# print(ext)
+
+# Get todays date and time
+now = datetime.datetime.now()
+
+# format date as dd-mm-yyyy
+dte = str(now.day) + '-' + str(now.month) + '-' + str(now.year)
+
+# build up backup path
+bkupfilename = filewithoutext + ' ' + dte + ext
+bkuppath = path + '/' + bkupfilename
+# print(bkuppath)
+
+# backup file
 try:
-    copyfile(SOURCE, TARGET)
+    shutil.copy(SOURCE, BKUPDIR)
 
 except Exception as e:
     print('Copy Error')
     print(e)
     quit()
 
-# # rename file
-# newname =
-# os.rename(PATH,)
+# rename file
+oldname = os.path.join(BKUPDIR, filename)
+# print(oldname)
+
+newname = os.path.join(BKUPDIR, bkupfilename)
+# print(newname)
+
+os.rename(oldname, newname)
 
 # load workbook
 try:
-    wb = pyxl.load_workbook('Financial statement Master.xlsx')
+    wb = pyxl.load_workbook(SOURCE)
 
 except Exception as e:
     print('1. Workbook Load Error')
@@ -57,7 +98,7 @@ parseErr = False
 
 while (ws.cell(row, 2).value):
     # build API url
-    cryptoticker = ws.cell(row, 2).value
+    indiaticker = ws.cell(row, 2).value
     print(indiaticker)
 
     quandlurl = 'https://www.quandl.com/api/v3/datasets/NSE/' + \
