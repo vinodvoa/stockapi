@@ -1,6 +1,5 @@
 """
-This program gets US and India stock prices via APIs of Alphadantage and Quandl
-respectively and updates a spreadsheet
+This program gets India, US and Crypto prices via APIs and updates a spreadsheet
 """
 import sys
 import os
@@ -76,7 +75,13 @@ oldname = os.path.join(BKUPDIR, filename)
 newname = os.path.join(BKUPDIR, bkupfilename)
 # print(newname)
 
-os.rename(oldname, newname)
+try:
+    os.rename(oldname, newname)
+
+except Exception as e:
+    print('File Rename Error')
+    print(e)
+    quit()
 
 # load workbook
 try:
@@ -145,7 +150,7 @@ while (ws.cell(row, 2).value):
     row += 1
     time.sleep(1)
 
-# get US sheet
+# Process US sheet
 ws = wb[USSHEET]
 
 row = 2
@@ -205,7 +210,7 @@ while (ws.cell(row, 2).value):
     readErr = False
     parseErr = False
 
-# get Crypto sheet
+# process Crypto sheet
 ws = wb[CRYPTOSHEET]
 
 row = 2
