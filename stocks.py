@@ -141,7 +141,7 @@ while (ws.cell(row, 2).value):
         ws.cell(row, 8).value = float(parsed_json['dataset']['data'][0][1])
         print(ws.cell(row, 8).value)
 
-    print(row)
+    # print(row)
     row += 1
     time.sleep(1)
 
@@ -246,7 +246,7 @@ while (ws.cell(row, 2).value):
     if not openErr and not readErr:
         try:
             parsed_json = json.loads(stockjson)
-            print(parsed_json)
+            # print(parsed_json)
 
         except Exception as e:
             print('3. Parse Error')
@@ -259,7 +259,7 @@ while (ws.cell(row, 2).value):
         ws.cell(row, 5).value = float(parsed_json['USD'])
         print(ws.cell(row, 5).value)
 
-    print(row)
+    # print(row)
     row += 1
     time.sleep(1)
 
@@ -270,7 +270,7 @@ while (ws.cell(row, 2).value):
 # save workbook
 try:
     print('Save')
-    wb.save('Financial statement Master.xlsx')
+    wb.save(SOURCE)
 
 except Exception as e:
     print('Save Error')
