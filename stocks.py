@@ -25,8 +25,8 @@ TARGET = '/Users/vinodverghese/Dropbox/Python/Learning/Completed/Stockapi/stocka
 if not (os.path.exists(SOURCE)):
     print('%s does not exist' % SOURCE)
     sys.exit(99)
-else:
-    print('File exists')
+# else:
+#     print('File exists')
 
 # check if target file exists
 if not (os.path.exists(TARGET)):
@@ -60,6 +60,7 @@ bkuppath = path + '/' + bkupfilename
 # print(bkuppath)
 
 # backup file
+print('Backing up..')
 try:
     shutil.copy(SOURCE, BKUPDIR)
 
@@ -83,7 +84,11 @@ except Exception as e:
     print(e)
     quit()
 
+print('Backup complete')
+
 # load workbook
+print('Loading workbook')
+
 try:
     wb = pyxl.load_workbook(SOURCE)
 
@@ -92,7 +97,11 @@ except Exception as e:
     print(e)
     quit()
 
+print('Loading complete')
+
 # Process INDIA spreadsheet
+print('Getting Indian stock prices..')
+
 ws = wb[INSHEET]
 
 # get ticker, call API, update price
@@ -148,9 +157,11 @@ while (ws.cell(row, 2).value):
 
     # print(row)
     row += 1
-    time.sleep(1)
+    time.sleep(0.5)
 
 # Process US sheet
+print('Getting US stock prices..')
+
 ws = wb[USSHEET]
 
 row = 2
@@ -204,13 +215,15 @@ while (ws.cell(row, 2).value):
 
     print(row)
     row += 1
-    time.sleep(1)
+    time.sleep(0.5)
 
     openErr = False
     readErr = False
     parseErr = False
 
 # process Crypto sheet
+print('Getting Crypto prices..')
+
 ws = wb[CRYPTOSHEET]
 
 row = 2
@@ -266,18 +279,21 @@ while (ws.cell(row, 2).value):
 
     # print(row)
     row += 1
-    time.sleep(1)
+    time.sleep(0.5)
 
     openErr = False
     readErr = False
     parseErr = False
 
 # save workbook
+print('Saving workbook..')
+
 try:
-    print('Save')
     wb.save(SOURCE)
 
 except Exception as e:
     print('Save Error')
     print(e)
     quit()
+
+print('Saved')
