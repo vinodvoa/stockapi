@@ -12,14 +12,18 @@ import json
 import time
 import datetime
 
+from bs4 import BeautifulSoup
+
 # ALPHAKEY = 'D9ZW4UF3RPMXif7H'
 QUANDLKEY = 'ahzB_xyURSjA4V7iHXtT'
 USSHEET = 'US Stocks'
 INSHEET = 'IN Stocks'
 CRYPTOSHEET = 'Crypto'
+GOLDSHEET = 'Gold'
 SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx'
 BKUPDIR = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Backup'
 TARGET = '/Users/vinodverghese/Dropbox/Python/Learning/Completed/Stockapi/stockapi/Financial statement Master.xlsx'
+URL = 'https://www.moneymetals.com/precious-metals-charts/gold-price'
 
 # check if source file exists
 if not (os.path.exists(SOURCE)):
@@ -284,6 +288,29 @@ while (ws.cell(row, 2).value):
     openErr = False
     readErr = False
     parseErr = False
+
+# process Gold sheet
+print('Getting Gold price..')
+
+ws = wb[GOLDSHEET]
+
+# load page from url
+page = requests.get(URL)
+
+# create BS
+soup = BeautifulSoup(page.content)
+# print(soup.body)
+
+# find table tag housing price
+panel = soup.find('td', {'class': 'text-center'})
+# print(panel)
+
+# get price and remove non numeric chars
+price = panel.text.replace('$', '').replace(',', '')
+print(price)
+
+# update price in sheet
+ws['D8'] = float(price)
 
 # save workbook
 print('Saving workbook..')
