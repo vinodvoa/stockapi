@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 This program gets prices for India stock, India mutual fund, US stock and Crypto prices
 via free APIs / web scraping and updates a spreadsheet
@@ -12,6 +14,7 @@ import time
 import json
 import logging
 import openpyxl as pyxl
+import pytest
 
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
@@ -100,15 +103,41 @@ sghols = [
 ]
 
 # global vars
+logger = None
 wb = None
 querydte = None
+
+
+def setup_logger():
+    """Logging setup (hierarchy: DIWEC)"""
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(levelname)s:%(name)s:%(asctime)s:%(message)s')
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
+
+    file_handler = logging.FileHandler('stocksdebug.log')
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.DEBUG)
+    logger.addHandler(file_handler)
+
+    file_handler = logging.FileHandler('stockserr.log')
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.ERROR)
+    logger.addHandler(file_handler)
+
+    return logger
 
 
 def check_file_exists():
     """ check if source file exists """
     if not (os.path.exists(SOURCE)):
         logger.error('%s does not exist' % SOURCE)
-        sys.exit(99)
+        raise SystemExit(99)
     else:
         logger.info('%s exist' % SOURCE)
 
@@ -669,29 +698,8 @@ def save_workbook():
     logger.info('Saved')
 
 
-"""Logging setup (hierarchy: DIWEC)"""
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-formatter = logging.Formatter('%(levelname)s:%(name)s:%(asctime)s:%(message)s')
-
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
-
-file_handler = logging.FileHandler('stocksdebug.log')
-file_handler.setFormatter(formatter)
-file_handler.setLevel(logging.DEBUG)
-logger.addHandler(file_handler)
-
-file_handler = logging.FileHandler('stockserr.log')
-file_handler.setFormatter(formatter)
-file_handler.setLevel(logging.ERROR)
-logger.addHandler(file_handler)
-
-
 if __name__ == '__main__':
+    logger = setup_logger()
     check_file_exists()
     backup_input_file()
 
