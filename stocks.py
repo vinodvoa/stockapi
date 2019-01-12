@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-This program gets prices for India stock, India mutual fund, US stock and Crypto prices
-via free APIs / web scraping and updates a spreadsheet
+This program gets prices for India stock, India mutual fund, US stock & Crypto
+prices via free APIs / web scraping and updates a spreadsheet
 Add Holiday handling - http://www.rightline.net/calendar/market-holidays.html
 """
-import sys
+# import sys
 import os.path
 import urllib.request
 import requests
@@ -14,42 +14,42 @@ import time
 import json
 import logging
 import openpyxl as pyxl
-import pytest
+# import pytest
 
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
-################################################################################
+###############################################################################
 # KEYS
-################################################################################
+###############################################################################
 QUANDLKEY = 'ahzB_xyURSjA4V7iHXtT'  # stock
 # CURRENCYKEY = '5966705342ec13f9c42e532497e6f060'  # USD rates
 # FIXERKEY = '13641e3f360078f91a3294bcc19373d8'  # GBP rates
 # ALPHAKEY = 'D9ZW4UF3RPMXif7H'
 # MASHAPEKEY = 'OhAQqUguNXmshsiWsbcrJGpk4UI9p1uAoNsjsnjQcjKDPPJvlx'
 
-################################################################################
+###############################################################################
 # Excel sheet name
-################################################################################
-RATESHEET = 'Rates'
+###############################################################################
+RATESHEET = 'FX Rates'
 INSHEET = 'IN Stocks'
-INUTSHEET = 'IN-UT'
+INUTSHEET = 'IN UT'
 SGSHEET = 'SG Stocks'
-SGUTSHEET = 'SG-UT'
+SGUTSHEET = 'SG UT'
 USSHEET = 'US Stocks'
 CRYPTOSHEET = 'Crypto'
 GOLDSHEET = 'Gold'
 
-################################################################################
+###############################################################################
 # Paths
-################################################################################
+###############################################################################
 BKUPDIR = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Backup'
 SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx'
 # TARGET = '/Users/vinodverghese/Dropbox/Python/Learning/Completed/Stockapi/stockapi/Financial statement Master.xlsx'
 
-################################################################################
+###############################################################################
 # URLs
-################################################################################
+###############################################################################
 GOLDURL = 'https://www.moneymetals.com/precious-metals-charts/gold-price'
 SGUTURL = 'https://www.msn.com/en-sg/money/funddetails/fi-F0HKG062P2'
 USDURL = 'https://www.exchange-rates.org/currentRates/P/USD'
@@ -57,9 +57,9 @@ CADURL = 'https://www.exchange-rates.org/currentRates/P/CAD'
 GBPURL = 'https://www.exchange-rates.org/currentRates/P/GBP'
 SGDURL = 'https://www.exchange-rates.org/currentRates/P/SGD'
 
-################################################################################
+###############################################################################
 # Stock market holidays
-################################################################################
+###############################################################################
 ushols = [
     '2019-1-1', '2020-1-1', '2021-1-1',
     '2019-1-21', '2020-1-20', '2021-1-18', '2022-1-17',
@@ -298,6 +298,7 @@ def get_forex_rates():
                         ws.cell(row, 2).value = usdinrrate
                         row += 1
                         break
+
                 elif currency == 'USD to SGD':
                     if moretds.find('a', title='Singapore Dollar'):
                         logger.debug('Next sibling: %s' % moretds.next_sibling)
@@ -306,6 +307,7 @@ def get_forex_rates():
                         ws.cell(row, 2).value = usdsgdrate
                         row += 1
                         break
+
                 elif currency == 'SGD to INR':
                     if moretds.find('a', title='Indian Rupee'):
                         logger.debug('Next sibling: %s' % moretds.next_sibling)
@@ -314,6 +316,7 @@ def get_forex_rates():
                         ws.cell(row, 2).value = sgdinrrate
                         row += 1
                         break
+
                 elif currency == 'CAD to SGD':
                     if moretds.find('a', title='Singapore Dollar'):
                         logger.debug('Next sibling: %s' % moretds.next_sibling)
@@ -322,6 +325,7 @@ def get_forex_rates():
                         ws.cell(row, 2).value = cadsgdrate
                         row += 1
                         break
+
                 elif currency == 'GBP to SGD':
                     if moretds.find('a', title='Singapore Dollar'):
                         logger.debug('Next sibling: %s' % moretds.next_sibling)
@@ -339,66 +343,104 @@ def get_india_stock_prices():
     logger.info('Getting Indian stock prices..')
 
     ws = wb[INSHEET]
-    # querydte = '2018-11-22'
 
     # get ticker, call API, update price
     row = 2
-    openErr = False
-    readErr = False
-    parseErr = False
 
     while (ws.cell(row, 2).value):
-        # build API url
-        indiaticker = ws.cell(row, 2).value
-        logger.info(indiaticker)
+        inticker = ws.cell(row, 2).value
+        logger.info('IN Ticker : %s' % inticker)
 
-        quandlurl = 'https://www.quandl.com/api/v3/datasets/NSE/' + \
-            indiaticker + \
-            '.json?start_date=' + querydte + '&end_date=' + querydte + \
-            '&api_key=' + QUANDLKEY
+        yahoourl = 'https://in.finance.yahoo.com/quote/' + inticker + \
+            '.NS?p=' + inticker + '.NS&.tsrc=fin-srch-v1'
 
-        logger.debug('URL : %s' % quandlurl)
+        # logger.info('SG Stock URL : %s' % sgtickerurl)
 
-        # open url
+        page = requests.get(yahoourl)
+
+        # create BS
+        soup = BeautifulSoup(page.content, 'lxml')
+
+        divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+
         try:
-            f = urllib.request.urlopen(quandlurl)
+            price = divtag.div.span.text
+            ws.cell(row, 8).value = float(price.replace(',', ''))
 
         except Exception as e:
-            logger.exception('URL open error : %s' % e)
-            openErr = True
+            logger.exception('Index error : %s' % e)
+            row += 1
+            continue
 
-        # read from url
-        if not openErr:
-            try:
-                stockjson = f.read()
-
-            except Exception as e:
-                logger.exception('URL read error : %s' % e)
-                readErr = True
-
-        # parse json into dictionary
-        if not openErr and not readErr:
-            try:
-                parsed_json = json.loads(stockjson)
-
-            except Exception as e:
-                logger.exception('JSON parse error : %s' % e)
-                parseErr = True
-
-        logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
-
-        # get price from dictionary
-        if not openErr and not readErr and not parseErr:
-            ws.cell(row, 8).value = float(parsed_json['dataset']['data'][0][1])
+        else:
             logger.info('Price : %s' % ws.cell(row, 8).value)
 
-        logger.debug('Row : %s' % row)
         row += 1
-        time.sleep(0.5)
+        time.sleep(0.3)
 
-        openErr = False
-        readErr = False
-        parseErr = False
+    # openErr = False
+    # readErr = False
+    # parseErr = False
+    # https://in.finance.yahoo.com/quote/KANSAINER.NS?p=KANSAINER.NS&.tsrc=fin-srch-v1
+    # while (ws.cell(row, 2).value):
+    #     # build API url
+    #     indiaticker = ws.cell(row, 2).value
+    #     logger.info(indiaticker)
+    #
+    #     quandlurl = 'https://www.quandl.com/api/v3/datasets/NSE/' + \
+    #         indiaticker + \
+    #         '.json?start_date=' + querydte + '&end_date=' + querydte + \
+    #         '&api_key=' + QUANDLKEY
+    #
+    #     logger.debug('URL : %s' % quandlurl)
+    #
+    #     # open url
+    #     try:
+    #         f = urllib.request.urlopen(quandlurl)
+    #
+    #     except Exception as e:
+    #         logger.exception('URL open error : %s' % e)
+    #         openErr = True
+    #
+    #     # read from url
+    #     if not openErr:
+    #         try:
+    #             stockjson = f.read()
+    #
+    #         except Exception as e:
+    #             logger.exception('URL read error : %s' % e)
+    #             readErr = True
+    #
+    #     # parse json into dictionary
+    #     if not openErr and not readErr:
+    #         try:
+    #             parsed_json = json.loads(stockjson)
+    #
+    #         except Exception as e:
+    #             logger.exception('JSON parse error : %s' % e)
+    #             parseErr = True
+    #
+    #     logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+    #
+    #     # get price from dictionary
+    #     if not openErr and not readErr and not parseErr:
+    #         try:
+    #             ws.cell(row, 8).value = float(parsed_json['dataset']['data'][0][1])
+    #
+    #         except Exception as e:
+    #             logger.exception('Index error : %s' % e)
+    #             break
+    #
+    #         else:
+    #             logger.info('Price : %s' % ws.cell(row, 8).value)
+    #
+    #     logger.debug('Row : %s' % row)
+    #     row += 1
+    #     time.sleep(0.5)
+    #
+    #     openErr = False
+    #     readErr = False
+    #     parseErr = False
 
 
 def get_india_ut_prices():
@@ -455,8 +497,15 @@ def get_india_ut_prices():
         # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
         # get price from dictionary
         if not openErr and not readErr and not parseErr:
-            ws.cell(row, 13).value = float(parsed_json['dataset']['data'][0][1])
-            logger.info('Price : %s' % ws.cell(row, 13).value)
+            try:
+                ws.cell(row, 13).value = float(parsed_json['dataset']['data'][0][1])
+
+            except Exception as e:
+                logger.exception('Index error : %s' % e)
+                break
+
+            else:
+                logger.info('Price : %s' % ws.cell(row, 13).value)
 
         logger.debug('Row : %s' % row)
         row += 1
@@ -583,10 +632,18 @@ def get_us_stock_prices():
 
         # update Excel sheet
         if not openErr and not readErr and not parseErr:
-            ws.cell(row, 6).value = float(parsed_json['quote']['latestPrice'])
-            logger.info('Price : %s' % ws.cell(row, 6).value)
+            try:
+                ws.cell(row, 6).value = float(parsed_json['quote']['latestPrice'])
+
+            except Exception as e:
+                logger.exception('Index error : %s' % e)
+                break
+
+            else:
+                logger.info('Price : %s' % ws.cell(row, 6).value)
 
         logger.debug('Row : %s' % row)
+
         row += 1
         time.sleep(0.5)
 
@@ -646,10 +703,18 @@ def get_crypto_prices():
         # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
         # update Excel sheet
         if not openErr and not readErr and not parseErr:
-            ws.cell(row, 5).value = float(parsed_json['USD'])
-            logger.info('Price : %s' % ws.cell(row, 5).value)
+            try:
+                ws.cell(row, 5).value = float(parsed_json['USD'])
+
+            except Exception as e:
+                logger.exception('Index error : %s' % e)
+                break
+
+            else:
+                logger.info('Price : %s' % ws.cell(row, 5).value)
 
         logger.debug('Row : %s' % row)
+
         row += 1
         time.sleep(0.5)
 
