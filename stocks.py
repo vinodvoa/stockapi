@@ -686,14 +686,14 @@ if __name__ == '__main__':
     forex = get_forex_rates()
     print(forex)
 
-    # get_india_stock_prices()
-    # get_india_ut_prices()
-    #
-    # get_singapore_stock_prices()
-    # get_singapore_ut_prices()
-    #
-    # get_us_stock_prices()
-    # get_crypto_prices()
-    # get_gold_price()
-    #
-    # save_workbook()
+    get_india_stock_prices()
+    get_india_ut_prices()
+
+    get_singapore_stock_prices()
+    get_singapore_ut_prices()
+
+    get_us_stock_prices()
+    get_crypto_prices()
+    get_gold_price()
+
+    save_workbook()
