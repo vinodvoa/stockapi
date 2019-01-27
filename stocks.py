@@ -52,55 +52,12 @@ SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Fin
 ###############################################################################
 GOLDURL = 'https://www.moneymetals.com/precious-metals-charts/gold-price'
 SGUTURL = 'https://www.msn.com/en-sg/money/funddetails/fi-F0HKG062P2'
-USDURL = 'https://www.exchange-rates.org/currentRates/P/USD'
-CADURL = 'https://www.exchange-rates.org/currentRates/P/CAD'
-GBPURL = 'https://www.exchange-rates.org/currentRates/P/GBP'
-SGDURL = 'https://www.exchange-rates.org/currentRates/P/SGD'
+USDFXURL = 'https://www.exchange-rates.org/currentRates/P/USD'
+CADFXURL = 'https://www.exchange-rates.org/currentRates/P/CAD'
+GBPFXURL = 'https://www.exchange-rates.org/currentRates/P/GBP'
+SGDFXURL = 'https://www.exchange-rates.org/currentRates/P/SGD'
+SGYURL = 'https://finance.yahoo.com/quote/'
 
-###############################################################################
-# Stock market holidays
-###############################################################################
-ushols = [
-    '2019-1-1', '2020-1-1', '2021-1-1',
-    '2019-1-21', '2020-1-20', '2021-1-18', '2022-1-17',
-    '2019-2-18', '2020-2-17', '2021-2-15', '2022-2-21',
-    '2019-4-19', '2020-4-10', '2021-4-2', '2022-4-15',
-    '2019-5-27', '2020-5-25', '2021-5-31', '2022-5-30',
-    '2019-7-4', '2020-7-3', '2021-7-5', '2022-7-4',
-    '2019-9-2', '2020-9-7', '2021-9-6', '2022-9-5',
-    '2019-11-28', '2020-11-26', '2021-11-25', '2022-11-24',
-    '2019-12-25', '2020-12-25', '2021-12-24', '2022-12-26'
-]
-
-inhols = [
-    '2019-3-4', '2019-3-21',
-    '2019-4-17',
-    '2019-5-1',
-    '2019-6-5',
-    '2019-8-15',
-    '2019-9-2',
-    '2019-10-2', '2019-10-28', '2019-10-29',
-    '2019-12-25',
-    '2020-2-21',
-    '2020-3-9',
-    '2020-4-14',
-    '2020-5-1',
-    '2020-6-5',
-    '2020-8-15', '2020-8-20',
-    '2020-10-2',
-    '2020-12-25'
-]
-
-sghols = [
-    '2019-1-1',
-    '2019-2-5', '2019-2-6',
-    '2019-4-19',
-    '2019-5-1', '2019-5-20',
-    '2019-6-5',
-    '2019-8-9', '2019-8-12',
-    '2019-10-28',
-    '2019-12-25'
-]
 
 # global vars
 logger = None
@@ -133,13 +90,13 @@ def setup_logger():
     return logger
 
 
-def check_file_exists():
+def check_file_exists(filename):
     """ check if source file exists """
-    if not (os.path.exists(SOURCE)):
-        logger.error('%s does not exist' % SOURCE)
+    if not (os.path.exists(filename)):
+        logger.error('%s does not exist' % filename)
         raise SystemExit(99)
     else:
-        logger.info('%s exist' % SOURCE)
+        logger.info('%s exist' % filename)
 
 # def check_output_file_exists():
     # """ check if target file exists """
@@ -228,8 +185,8 @@ def get_query_date():
                 now = datetime.now() - timedelta(2)
                 querydte = str(now.year) + '-' + str(now.month) + '-' + str(now.day)
 
-    logger.debug('Weekday : %s' % now.weekday())
-    logger.info('Query date : %s' % querydte)
+    # logger.debug('Weekday : %s' % now.weekday())
+    # logger.info('Query date : %s' % querydte)
 
     return querydte
 
@@ -263,17 +220,17 @@ def get_forex_rates():
         logger.info('Currency : %s' % currency)
 
         if currency[0: 3] == 'USD':
-            logger.debug('USD URL : %s' % USDURL)
-            page = requests.get(USDURL)
+            logger.debug('USD URL : %s' % USDFXURL)
+            page = requests.get(USDFXURL)
         elif currency[0: 3] == 'GBP':
-            logger.debug('GBP URL : %s' % GBPURL)
-            page = requests.get(GBPURL)
+            logger.debug('GBP URL : %s' % GBPFXURL)
+            page = requests.get(GBPFXURL)
         elif currency[0: 3] == 'CAD':
-            logger.debug('CAD URL : %s' % CADURL)
-            page = requests.get(CADURL)
+            logger.debug('CAD URL : %s' % CADFXURL)
+            page = requests.get(CADFXURL)
         elif currency[0: 3] == 'SGD':
-            logger.debug('SGD URL : %s' % SGDURL)
-            page = requests.get(SGDURL)
+            logger.debug('SGD URL : %s' % SGDFXURL)
+            page = requests.get(SGDFXURL)
 
         logger.debug('Forex page : %s' % page)
 
@@ -282,6 +239,8 @@ def get_forex_rates():
 
         tr = soup.findAll('tr')
         logger.debug('Table rows : %s' % tr)
+
+        fxrates = []
 
         for td in tr:
             tds = td.findAll('td')
@@ -296,6 +255,7 @@ def get_forex_rates():
                         usdinrrate = float(moretds.next_sibling.strong.text)
                         logger.info('USD to INR Rate : %s' % usdinrrate)
                         ws.cell(row, 2).value = usdinrrate
+                        fxrates.append([currency, usdinrrate])
                         row += 1
                         break
 
@@ -305,6 +265,7 @@ def get_forex_rates():
                         usdsgdrate = float(moretds.next_sibling.strong.text)
                         logger.info('USD to SGD Rate : %s' % usdsgdrate)
                         ws.cell(row, 2).value = usdsgdrate
+                        fxrates.append([currency, usdsgdrate])
                         row += 1
                         break
 
@@ -314,6 +275,7 @@ def get_forex_rates():
                         sgdinrrate = float(moretds.next_sibling.strong.text)
                         logger.info('SGD to INR Rate : %s' % sgdinrrate)
                         ws.cell(row, 2).value = sgdinrrate
+                        fxrates.append([currency, sgdinrrate])
                         row += 1
                         break
 
@@ -323,6 +285,7 @@ def get_forex_rates():
                         cadsgdrate = float(moretds.next_sibling.strong.text)
                         logger.info('CAD to SGD Rate : %s' % cadsgdrate)
                         ws.cell(row, 2).value = cadsgdrate
+                        fxrates.append([currency, cadsgdrate])
                         row += 1
                         break
 
@@ -332,10 +295,11 @@ def get_forex_rates():
                         gbpsgdrate = float(moretds.next_sibling.strong.text)
                         logger.info('GBP to SGD Rate : %s' % gbpsgdrate)
                         ws.cell(row, 2).value = gbpsgdrate
+                        fxrates.append([currency, gbpsgdrate])
                         row += 1
                         break
 
-            logger.debug('Row : %s' % row)
+    return fxrates
 
 
 def get_india_stock_prices():
@@ -354,7 +318,7 @@ def get_india_stock_prices():
         yahoourl = 'https://in.finance.yahoo.com/quote/' + inticker + \
             '.NS?p=' + inticker + '.NS&.tsrc=fin-srch-v1'
 
-        # logger.info('SG Stock URL : %s' % sgtickerurl)
+        logger.debug('SG Stock URL : %s' % yahoourl)
 
         page = requests.get(yahoourl)
 
@@ -369,7 +333,7 @@ def get_india_stock_prices():
 
         except Exception as e:
             logger.exception('Index error : %s' % e)
-            row += 1
+            # row += 1
             continue
 
         else:
@@ -377,70 +341,6 @@ def get_india_stock_prices():
 
         row += 1
         time.sleep(0.3)
-
-    # openErr = False
-    # readErr = False
-    # parseErr = False
-    # https://in.finance.yahoo.com/quote/KANSAINER.NS?p=KANSAINER.NS&.tsrc=fin-srch-v1
-    # while (ws.cell(row, 2).value):
-    #     # build API url
-    #     indiaticker = ws.cell(row, 2).value
-    #     logger.info(indiaticker)
-    #
-    #     quandlurl = 'https://www.quandl.com/api/v3/datasets/NSE/' + \
-    #         indiaticker + \
-    #         '.json?start_date=' + querydte + '&end_date=' + querydte + \
-    #         '&api_key=' + QUANDLKEY
-    #
-    #     logger.debug('URL : %s' % quandlurl)
-    #
-    #     # open url
-    #     try:
-    #         f = urllib.request.urlopen(quandlurl)
-    #
-    #     except Exception as e:
-    #         logger.exception('URL open error : %s' % e)
-    #         openErr = True
-    #
-    #     # read from url
-    #     if not openErr:
-    #         try:
-    #             stockjson = f.read()
-    #
-    #         except Exception as e:
-    #             logger.exception('URL read error : %s' % e)
-    #             readErr = True
-    #
-    #     # parse json into dictionary
-    #     if not openErr and not readErr:
-    #         try:
-    #             parsed_json = json.loads(stockjson)
-    #
-    #         except Exception as e:
-    #             logger.exception('JSON parse error : %s' % e)
-    #             parseErr = True
-    #
-    #     logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
-    #
-    #     # get price from dictionary
-    #     if not openErr and not readErr and not parseErr:
-    #         try:
-    #             ws.cell(row, 8).value = float(parsed_json['dataset']['data'][0][1])
-    #
-    #         except Exception as e:
-    #             logger.exception('Index error : %s' % e)
-    #             break
-    #
-    #         else:
-    #             logger.info('Price : %s' % ws.cell(row, 8).value)
-    #
-    #     logger.debug('Row : %s' % row)
-    #     row += 1
-    #     time.sleep(0.5)
-    #
-    #     openErr = False
-    #     readErr = False
-    #     parseErr = False
 
 
 def get_india_ut_prices():
@@ -494,7 +394,8 @@ def get_india_ut_prices():
                 logger.exception('JSON parser error : %s' % e)
                 parseErr = True
 
-        # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+        logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+
         # get price from dictionary
         if not openErr and not readErr and not parseErr:
             try:
@@ -528,16 +429,10 @@ def get_singapore_stock_prices():
         sgticker = ws.cell(row, 2).value
         logger.info('SG Ticker : %s' % sgticker)
 
-        if sgticker == 'D05.SI':
-            sgtickerurl = 'https://finance.yahoo.com/quote/D05.SI?p=D05.SI&.tsrc=fin-srch'
-        elif sgticker == 'O39.SI':
-            sgtickerurl = 'https://finance.yahoo.com/quote/O39.SI?p=O39.SI&.tsrc=fin-srch'
-        elif sgticker == 'A68U.SI':
-            sgtickerurl = 'https://finance.yahoo.com/quote/A68U.SI?p=A68U.SI&.tsrc=fin-srch'
-        elif sgticker == 'NR7.SI':
-            sgtickerurl = 'https://finance.yahoo.com/quote/NR7.SI?p=NR7.SI&.tsrc=fin-srch'
+        sgtickerurl = 'https://finance.yahoo.com/quote/' + sgticker + \
+            '?p=' + sgticker + '&.tsrc=fin-srch'
 
-        # logger.info('SG Stock URL : %s' % sgtickerurl)
+        logger.debug('SG Stock URL : %s' % sgtickerurl)
 
         page = requests.get(sgtickerurl)
 
@@ -598,51 +493,66 @@ def get_us_stock_prices():
         usticker = ws.cell(row, 2).value
         logger.info('US stock ticker : %s' % usticker)
 
-        iexurl = 'https://api.iextrading.com/1.0/stock/' + usticker + '/book'
-        logger.debug('US stock price url : %s' % iexurl)
+        if usticker in ['TCEHY']:
+            ustickerurl = 'https://finance.yahoo.com/quote/' + usticker + \
+                '?p=' + usticker + '&.tsrc=fin-srch'
 
-        # open url
-        try:
-            f = urllib.request.urlopen(iexurl)
+            page = requests.get(ustickerurl)
 
-        except Exception as e:
-            logger.exception('URL open error : %s' % e)
-            openErr = True
+            # create BS
+            soup = BeautifulSoup(page.content, 'lxml')
 
-        # read url
-        if not openErr:
+            divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+            price = divtag.div.span.text
+
+            ws.cell(row, 6).value = float(price)
+            logger.info('Price : %s' % ws.cell(row, 6).value)
+        else:
+            iexurl = 'https://api.iextrading.com/1.0/stock/' + usticker + '/book'
+            logger.debug('US stock price url : %s' % iexurl)
+
+            # open url
             try:
-                stockjson = f.read()
+                f = urllib.request.urlopen(iexurl)
 
             except Exception as e:
-                logger.exception('URL read error : %s' % e)
-                readErr = True
+                logger.exception('URL open error : %s' % e)
+                openErr = True
 
-        # parse json into dictionary
-        if not openErr and not readErr:
-            try:
-                parsed_json = json.loads(stockjson)
-                logger.debug('JSON parser error : %s' % parsed_json)
+            # read url
+            if not openErr:
+                try:
+                    stockjson = f.read()
 
-            except Exception as e:
-                logger.exception('JSON parser error : %s' % e)
-                parseErr = True
+                except Exception as e:
+                    logger.exception('URL read error : %s' % e)
+                    readErr = True
 
-        # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+            # parse json into dictionary
+            if not openErr and not readErr:
+                try:
+                    parsed_json = json.loads(stockjson)
+                    logger.debug('JSON parser error : %s' % parsed_json)
 
-        # update Excel sheet
-        if not openErr and not readErr and not parseErr:
-            try:
-                ws.cell(row, 6).value = float(parsed_json['quote']['latestPrice'])
+                except Exception as e:
+                    logger.exception('JSON parser error : %s' % e)
+                    parseErr = True
 
-            except Exception as e:
-                logger.exception('Index error : %s' % e)
-                break
+            # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
 
-            else:
-                logger.info('Price : %s' % ws.cell(row, 6).value)
+            # update Excel sheet
+            if not openErr and not readErr and not parseErr:
+                try:
+                    ws.cell(row, 6).value = float(parsed_json['quote']['latestPrice'])
 
-        logger.debug('Row : %s' % row)
+                except Exception as e:
+                    logger.exception('Index error : %s' % e)
+                    break
+
+                else:
+                    logger.info('Price : %s' % ws.cell(row, 6).value)
+
+            logger.debug('Row : %s' % row)
 
         row += 1
         time.sleep(0.5)
@@ -700,7 +610,8 @@ def get_crypto_prices():
                 logger.exception('JSON parser error : %s' % e)
                 parseErr = True
 
-        # logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+        logger.debug(json.dumps(parsed_json, indent=4, sort_keys=True))
+
         # update Excel sheet
         if not openErr and not readErr and not parseErr:
             try:
@@ -765,23 +676,24 @@ def save_workbook():
 
 if __name__ == '__main__':
     logger = setup_logger()
-    check_file_exists()
+    check_file_exists(SOURCE)
     backup_input_file()
 
     querydte = get_query_date()
 
     wb = load_excel_workbook()
 
-    get_forex_rates()
+    forex = get_forex_rates()
+    print(forex)
 
-    get_india_stock_prices()
-    get_india_ut_prices()
-
-    get_singapore_stock_prices()
-    get_singapore_ut_prices()
-
-    get_us_stock_prices()
-    get_crypto_prices()
-    get_gold_price()
-
-    save_workbook()
+    # get_india_stock_prices()
+    # get_india_ut_prices()
+    #
+    # get_singapore_stock_prices()
+    # get_singapore_ut_prices()
+    #
+    # get_us_stock_prices()
+    # get_crypto_prices()
+    # get_gold_price()
+    #
+    # save_workbook()
