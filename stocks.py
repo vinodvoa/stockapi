@@ -53,6 +53,8 @@ SGYURL = 'https://finance.yahoo.com/quote/'
 
 quandlkey = os.environ.get('QUANDLKEY')
 
+DELAY = 1
+
 # global vars
 logger = None
 wb = None
@@ -330,11 +332,11 @@ def get_india_stock_prices():
             continue
 
         price = divtag.div.span.text
-        ws.cell(row, 8).value = float(price.replace(',', ''))
-        logger.info('Price : %s' % ws.cell(row, 8).value)
+        ws.cell(row, 7).value = float(price.replace(',', ''))
+        logger.info('Price : %s' % ws.cell(row, 7).value)
 
         row += 1
-        time.sleep(0.3)
+        time.sleep(DELAY)
 
 
 def get_india_ut_prices():
@@ -372,7 +374,7 @@ def get_india_ut_prices():
         logger.info('Price : %s' % ws.cell(row, 13).value)
 
         row += 1
-        time.sleep(0.3)
+        time.sleep(DELAY)
 
 
 def get_singapore_stock_prices():
@@ -503,7 +505,7 @@ def get_us_stock_prices():
             logger.debug('Row : %s' % row)
 
         row += 1
-        time.sleep(0.3)
+        time.sleep(DELAY)
 
         openErr = False
         readErr = False
@@ -569,7 +571,7 @@ def get_crypto_prices():
         logger.debug('Row : %s' % row)
 
         row += 1
-        time.sleep(0.3)
+        time.sleep(DELAY)
 
         openErr = False
         readErr = False
@@ -625,7 +627,7 @@ if __name__ == '__main__':
     get_india_ut_prices()
 
     get_singapore_stock_prices()
-    get_singapore_ut_prices()
+    # get_singapore_ut_prices()
 
     get_us_stock_prices()
 
