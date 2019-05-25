@@ -44,7 +44,7 @@ SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Fin
 # URLs
 ###############################################################################
 GOLDURL = 'https://www.moneymetals.com/precious-metals-charts/gold-price'
-SGUTURL = 'https://www.msn.com/en-sg/money/funddetails/fi-F0HKG062P2'
+SGUTURL = 'https://www.ocbc.com/rates/daily_price_unit_trust.html'
 USDFXURL = 'https://www.exchange-rates.org/currentRates/P/USD'
 CADFXURL = 'https://www.exchange-rates.org/currentRates/P/CAD'
 GBPFXURL = 'https://www.exchange-rates.org/currentRates/P/GBP'
@@ -424,10 +424,10 @@ def get_singapore_ut_prices():
     soup = BeautifulSoup(page.content, 'lxml')
     logger.debug('Soup : %s' % soup.body)
 
-    panel = soup.find('div', {'class': 'precurrentvalue'})
+    panel = soup.find('a', string='Infinity US 500 Stock Index Fund SGD')
     logger.debug('Tag : %s' % panel)
 
-    price = panel.span.text
+    price = panel.next_element.next_element.text
 
     ws['L2'].value = float(price)
     logger.info('UT Price : %s' % ws['L2'].value)
@@ -627,7 +627,7 @@ if __name__ == '__main__':
     get_india_ut_prices()
 
     get_singapore_stock_prices()
-    # get_singapore_ut_prices()
+    get_singapore_ut_prices()
 
     get_us_stock_prices()
 
