@@ -1,0 +1,482 @@
+ERROR:__main__:2019-06-18 08:17:12,732:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2019-06-22 08:39:49,183:Index error : 'USD'
+Traceback (most recent call last):
+  File "stocks.py", line 566, in get_crypto_prices
+    ws.cell(row, 5).value = float(parsed_json['USD'])
+KeyError: 'USD'
+ERROR:__main__:2019-06-27 08:31:33,294:Index error : 'USD'
+Traceback (most recent call last):
+  File "stocks.py", line 566, in get_crypto_prices
+    ws.cell(row, 5).value = float(parsed_json['USD'])
+KeyError: 'USD'
+ERROR:__main__:2019-06-29 08:38:38,466:URL open error : <urlopen error [Errno 60] Operation timed out>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1392, in connect
+    super().connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 936, in connect
+    (self.host,self.port), self.timeout, self.source_address)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 724, in create_connection
+    raise err
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 713, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 60] Operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 473, in get_us_stock_prices
+    f = urllib.request.urlopen(iexurl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 60] Operation timed out>
+ERROR:__main__:2019-06-29 08:50:17,496:Index error : 'USD'
+Traceback (most recent call last):
+  File "stocks.py", line 566, in get_crypto_prices
+    ws.cell(row, 5).value = float(parsed_json['USD'])
+KeyError: 'USD'
+ERROR:__main__:2019-07-27 06:49:45,136:URL open error : <urlopen error [Errno 60] Operation timed out>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1392, in connect
+    super().connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 936, in connect
+    (self.host,self.port), self.timeout, self.source_address)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 724, in create_connection
+    raise err
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 713, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 60] Operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 473, in get_us_stock_prices
+    f = urllib.request.urlopen(iexurl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 60] Operation timed out>
+ERROR:__main__:2019-07-27 07:03:17,421:URL open error : <urlopen error [Errno 60] Operation timed out>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1392, in connect
+    super().connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 936, in connect
+    (self.host,self.port), self.timeout, self.source_address)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 724, in create_connection
+    raise err
+  File "/Users/vinodverghese/anaconda/lib/python3.6/socket.py", line 713, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 60] Operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 473, in get_us_stock_prices
+    f = urllib.request.urlopen(iexurl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 60] Operation timed out>
+ERROR:__main__:2019-08-24 08:49:44,658:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-08-29 08:22:17,810:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-08-31 09:26:04,395:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-09-07 08:46:29,001:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-09-08 21:05:15,133:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-09-14 04:06:57,957:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-09-21 08:09:27,273:URL open error : <urlopen error [Errno 0] Error>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1400, in connect
+    server_hostname=server_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 407, in wrap_socket
+    _context=self, _session=session)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 817, in __init__
+    self.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 1077, in do_handshake
+    self._sslobj.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 689, in do_handshake
+    self._sslobj.do_handshake()
+OSError: [Errno 0] Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 495, in get_crypto_prices
+    f = urllib.request.urlopen(cryptourl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 0] Error>
+ERROR:__main__:2019-09-21 08:43:41,827:URL open error : <urlopen error [Errno 0] Error>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1400, in connect
+    server_hostname=server_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 407, in wrap_socket
+    _context=self, _session=session)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 817, in __init__
+    self.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 1077, in do_handshake
+    self._sslobj.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 689, in do_handshake
+    self._sslobj.do_handshake()
+OSError: [Errno 0] Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 495, in get_crypto_prices
+    f = urllib.request.urlopen(cryptourl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 0] Error>
+ERROR:__main__:2019-09-21 11:14:58,048:URL open error : <urlopen error [Errno 0] Error>
+Traceback (most recent call last):
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1318, in do_open
+    encode_chunked=req.has_header('Transfer-encoding'))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/http/client.py", line 1400, in connect
+    server_hostname=server_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 407, in wrap_socket
+    _context=self, _session=session)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 817, in __init__
+    self.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 1077, in do_handshake
+    self._sslobj.do_handshake()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/ssl.py", line 689, in do_handshake
+    self._sslobj.do_handshake()
+OSError: [Errno 0] Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "stocks.py", line 495, in get_crypto_prices
+    f = urllib.request.urlopen(cryptourl)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 526, in open
+    response = self._open(req, data)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 544, in _open
+    '_open', req)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 504, in _call_chain
+    result = func(*args)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1361, in https_open
+    context=self._context, check_hostname=self._check_hostname)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/urllib/request.py", line 1320, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 0] Error>
+ERROR:__main__:2019-09-23 08:15:08,454:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-09-28 10:38:38,565:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-10-05 06:02:33,151:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-10-12 08:58:44,320:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 555, in get_gold_price
+    price = panel.text.replace('$', '').replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-10-12 15:23:08,004:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 556, in get_gold_price
+    price = panel.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-10-12 15:24:00,384:Gold price retrieve error : 'NoneType' object has no attribute 'text'
+Traceback (most recent call last):
+  File "stocks.py", line 557, in get_gold_price
+    price = panel.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'text'
+ERROR:__main__:2019-10-12 15:26:24,214:Gold price retrieve error : 'NoneType' object has no attribute 'a'
+Traceback (most recent call last):
+  File "stocks.py", line 557, in get_gold_price
+    price = panel.a.span.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'a'
+ERROR:__main__:2019-10-19 06:24:15,042:Gold price retrieve error : 'NoneType' object has no attribute 'a'
+Traceback (most recent call last):
+  File "stocks.py", line 557, in get_gold_price
+    price = panel.a.span.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'a'
+ERROR:__main__:2019-11-09 22:18:35,379:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2019-11-09 22:21:03,416:Gold price retrieve error : 'NoneType' object has no attribute 'a'
+Traceback (most recent call last):
+  File "stocks.py", line 543, in get_gold_price
+    price = panel.a.span.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'a'
+ERROR:__main__:2019-11-09 22:28:16,729:Gold price retrieve error : 'NoneType' object has no attribute 'span'
+Traceback (most recent call last):
+  File "stocks.py", line 543, in get_gold_price
+    price = panel.span.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'span'
+ERROR:__main__:2019-11-09 22:37:01,505:Gold price retrieve error : could not convert string to float: '+0.2000 (+183.1169%)'
+Traceback (most recent call last):
+  File "stocks.py", line 545, in get_gold_price
+    ws['D8'].value = float(price)
+ValueError: could not convert string to float: '+0.2000 (+183.1169%)'
+ERROR:__main__:2019-11-16 07:32:09,119:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2019-11-23 06:34:44,727:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2019-11-30 08:28:55,069:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2019-12-12 10:37:05,166:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2020-01-10 07:16:00,480:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2020-01-11 08:54:02,492:Workbook load error : 
+Traceback (most recent call last):
+  File "stocks.py", line 200, in load_excel_workbook
+    wb = pyxl.load_workbook(SOURCE)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/reader/excel.py", line 317, in load_workbook
+    reader.read()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/reader/excel.py", line 279, in read
+    self.read_worksheets()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/reader/excel.py", line 227, in read_worksheets
+    ws_parser.bind_all()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/worksheet/_reader.py", line 408, in bind_all
+    self.bind_cells()
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/worksheet/_reader.py", line 331, in bind_cells
+    for idx, row in self.parser.parse():
+  File "/Users/vinodverghese/anaconda/lib/python3.6/site-packages/openpyxl/worksheet/_reader.py", line 139, in parse
+    for _, element in it:
+  File "/Users/vinodverghese/anaconda/lib/python3.6/xml/etree/ElementTree.py", line 1223, in iterator
+    data = source.read(16 * 1024)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/zipfile.py", line 872, in read
+    data = self._read1(n)
+  File "/Users/vinodverghese/anaconda/lib/python3.6/zipfile.py", line 940, in _read1
+    data += self._read2(n - len(data))
+  File "/Users/vinodverghese/anaconda/lib/python3.6/zipfile.py", line 975, in _read2
+    raise EOFError
+EOFError
+ERROR:__main__:2020-04-14 09:07:44,679:Gold price retrieve error : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 530, in get_gold_price
+    price = panel.div.span.text.replace(',', '')
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-04-29 07:00:11,703:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 315, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-04-29 07:03:03,866:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 315, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-04-30 06:32:33,361:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 315, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-04-30 06:35:08,631:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 315, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 06:51:18,098:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 06:56:47,426:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 06:59:49,904:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 07:15:08,699:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 07:20:52,336:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 07:24:11,525:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 08:31:19,172:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 08:37:40,516:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-01 08:41:20,312:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-02 08:12:51,530:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-05-03 09:28:28,423:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 317, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-06-04 08:20:00,131:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2020-06-04 08:20:45,093:/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx does not exist
+ERROR:__main__:2020-07-11 05:35:07,367:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 335, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'
+ERROR:__main__:2020-07-13 19:44:51,248:Tag not found : 'NoneType' object has no attribute 'div'
+Traceback (most recent call last):
+  File "stocks.py", line 335, in get_security_price_from_yahoo
+    price = divtag.div.span.text
+AttributeError: 'NoneType' object has no attribute 'div'

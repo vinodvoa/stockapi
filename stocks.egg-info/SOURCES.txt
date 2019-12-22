@@ -1,0 +1,7 @@
+README.md
+setup.py
+stocks.egg-info/PKG-INFO
+stocks.egg-info/SOURCES.txt
+stocks.egg-info/dependency_links.txt
+stocks.egg-info/entry_points.txt
+stocks.egg-info/top_level.txt

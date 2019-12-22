@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 
 
 ###############################################################################
-# Excel sheet names
+# Excel sheet name
 ###############################################################################
 RATESHEET = 'FX Rates'
 INSHEET = 'IN Stocks'
@@ -31,27 +31,38 @@ CRYPTOSHEET = 'Crypto'
 GOLDSHEET = 'Gold'
 FSSHEET = 'FS'
 
+PORTSHEET = 'Portfolio'
+
 ###############################################################################
 # Paths
 ###############################################################################
 BKUPDIR = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Backup'
 SOURCE = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Financial statement Master.xlsx'
+SOURCE1 = '/Volumes/Secomba/vinodverghese/Boxcryptor/Dropbox/Personal/Finance/Portfolio Balance.xlsx'
 
+# TARGET = '/Users/vinodverghese/Dropbox/Python/Learning/Completed/Stockapi/stockapi/Financial statement Master.xlsx'
 
 ###############################################################################
 # URLs
 ###############################################################################
+#GOLDURL = 'https://www.moneymetals.com/precious-metals-charts/gold-price'
+GOLDURL  = 'https://finance.yahoo.com/quote/XAUUSD=X'
 SGUTURL  = 'https://www.ocbc.com/rates/daily_price_unit_trust.html'
 USDFXURL = 'https://www.exchange-rates.org/currentRates/P/USD'
 CADFXURL = 'https://www.exchange-rates.org/currentRates/P/CAD'
 GBPFXURL = 'https://www.exchange-rates.org/currentRates/P/GBP'
 SGDFXURL = 'https://www.exchange-rates.org/currentRates/P/SGD'
+SGYURL   = 'https://finance.yahoo.com/quote/'
 
+quandlkey = os.environ.get('QUANDLKEY')
+
+DELAY = 3
 
 # global vars
-DELAY = 2
 logger = None
 wb = None
+wb1 = None
+querydte = None
 
 
 def setup_logger():
@@ -79,6 +90,11 @@ def setup_logger():
     return logger
 
 
+def check_urls(url):
+    page = requests.get(url)
+    return page.status_code
+
+
 def check_file_exists(filename):
     """ check if source file exists """
     if not (os.path.exists(filename)):
@@ -87,6 +103,14 @@ def check_file_exists(filename):
     else:
         logger.info('%s exist' % filename)
         return True
+
+# def check_output_file_exists():
+    # """ check if target file exists """
+    # if not (os.path.exists(TARGET)):
+    #     logger.error('%s does not exist' % TARGET)
+    #     sys.exit(99)
+    # else:
+    #     logger.info('%s exist' % TARGET)
 
 
 def backup_input_file():
@@ -146,6 +170,33 @@ def backup_input_file():
     logger.info('Backup renamed')
 
 
+# def get_query_date():
+#     """ get query date to use """
+
+#     # Get todays date and format
+#     now = datetime.now()
+
+#     if now.weekday() in range(0, 5):  # Weekdays
+#         if now.weekday() == 0:  # Mon
+#             now = datetime.now() - timedelta(3)
+#             querydte = str(now.year) + '-' + str(now.month) + '-' + str(now.day)
+#         else:
+#             querydte = str(now.year) + '-' + str(now.month) + '-' + str(now.day - 1)
+#     else:
+#         if now.weekday() == 5:  # Sat
+#             now = datetime.now() - timedelta(1)
+#             querydte = str(now.year) + '-' + str(now.month) + '-' + str(now.day)
+#         else:
+#             if now.weekday() == 6:  # Sun
+#                 now = datetime.now() - timedelta(2)
+#                 querydte = str(now.year) + '-' + str(now.month) + '-' + str(now.day)
+
+#     logger.info('Weekday : %s' % now.weekday())
+#     logger.info('Query date : %s' % querydte)
+
+#     return querydte
+
+
 def load_fs_workbook():
     """ Load workbook """
     logger.info('Loading fs workbook')
@@ -161,10 +212,25 @@ def load_fs_workbook():
 
     return wb
 
+def load_pb_workbook():
+    """ Load workbook """
+    logger.info('Loading pb workbook')
+
+    try:
+        wb1 = pyxl.load_workbook(SOURCE1)
+
+    except Exception as e:
+        logger.exception('Workbook load error : %s' % e)
+        quit()
+
+    logger.info('Loading of pb complete')
+
+    return wb1
+
 
 def get_forex_rates():
     """ Get forex rates """
-    logger.info('\nGetting forex rates..')
+    logger.info('Getting forex rates..')
 
     ws = wb[RATESHEET]
 
@@ -172,7 +238,7 @@ def get_forex_rates():
 
     while (ws.cell(row, 1).value):
         currency = ws.cell(row, 1).value
-        # logger.info('Currency : %s' % currency)
+        logger.info('Currency : %s' % currency)
 
         if currency[0: 3] == 'USD':
             logger.debug('USD URL : %s' % USDFXURL)
@@ -247,46 +313,23 @@ def get_forex_rates():
                         row += 1
                         break
 
-def get_security_price_from_yahoo(type, country, sheetname, tickercol, pricecol):
-    """ 
-    Get security price from Yahoo Finance
-    Parameters:
-        type - string; security type (EQ - Equity, UT - Unit Trust, CO - Commodities)
-        country - string; listed security country (US - USA, SG - Singapore, IN - India)
-        sheetname - string; input Excel sheet name
-        tickercol - numeric; column in Excel sheet containing ticker
-        pricecol - numeric; Excel column where ticker price is to be output 
-    """
+def get_security_price_from_yahoo(type, country, sheetname, tickercol, srcurl, searchtag, searchclass, pricecol):
+    """ Get security price """
+    logger.info('/nGetting stock prices from ' + srcurl)
+
     ws = wb[sheetname]
 
     row = 2
 
-    # Assign url based on country
-    if country == 'IN':
-        srcurl = 'https://in.finance.yahoo.com/quote/'
-    elif country == 'SG':
-        srcurl = 'https://sg.finance.yahoo.com/quote/'
-    elif country == 'US':
-        srcurl = 'https://finance.yahoo.com/quote/'
-    else:
-        srcurl = 'https://finance.yahoo.com/quote/'
-
-    logger.info('\nGetting stock prices from ' + srcurl)
-
-    # Loop through the ticker sheet column, extract the price and assign to price column
     while (ws.cell(row, tickercol).value):
         ticker = ws.cell(row, tickercol).value
 
         if type == 'UT':
             if country == 'IN':
                 yahoourl = srcurl + str(ticker) + '.BO?p=' + str(ticker) + '.BO&.tsrc=fin-srch-v1'
-            elif country =='SG':
-                yahoourl = srcurl    
-        elif type == 'CO':
-                yahoourl = srcurl + 'GC=F'
         else:    
             if country == 'IN':
-                if ticker == 'SRGHFL' or ticker == ' 500193':
+                if ticker == 'SRGHFL':
                     yahoourl = srcurl + ticker + '.BO?p=' + ticker + '.BO&.tsrc=fin-srch'
                 else:
                     yahoourl = srcurl + ticker + '.NS?p=' + ticker + '.NS&.tsrc=fin-srch'
@@ -302,7 +345,7 @@ def get_security_price_from_yahoo(type, country, sheetname, tickercol, pricecol)
         soup = BeautifulSoup(page.content, 'lxml')
 
         try:
-            divtag = soup.find('div', class_ = 'My(6px) Pos(r) smartphone_Mt(6px)')
+            divtag = soup.find(searchtag, class_=searchclass)
 
         except Exception as e:
             logger.exception('Find error : %s' % e)
@@ -318,15 +361,123 @@ def get_security_price_from_yahoo(type, country, sheetname, tickercol, pricecol)
             continue
 
         ws.cell(row, pricecol).value = float(price.replace(',', ''))
-        logger.info('%s / %s' % (ticker, ws.cell(row, pricecol).value))
+        logger.info('Ticker / Price : %s / %s' % (ticker, ws.cell(row, pricecol).value))
 
         row += 1
         time.sleep(DELAY)
 
 
+# def get_india_stock_prices():
+#     """ Get India stock prices """
+#     logger.info('Getting Indian stock prices..')
+
+#     ws = wb[INSHEET]
+
+#     row = 2
+
+#     while (ws.cell(row, 2).value):
+#         inticker = ws.cell(row, 2).value
+#         logger.info('IN Ticker : %s' % inticker)
+
+#         if inticker == 'SRGHFL':
+#             yahoourl = 'https://in.finance.yahoo.com/quote/' + inticker + \
+#                 '.BO?p=' + inticker + '.BO&.tsrc=fin-srch-v1'
+#         else:
+#             yahoourl = 'https://in.finance.yahoo.com/quote/' + inticker + \
+#                 '.NS?p=' + inticker + '.NS&.tsrc=fin-srch'
+
+#         logger.debug('SG Stock URL : %s' % yahoourl)
+
+#         page = requests.get(yahoourl)
+
+#         soup = BeautifulSoup(page.content, 'lxml')
+
+#         try:
+#             divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+
+#         except Exception as e:
+#             logger.exception('Index error : %s' % e)
+#             row += 1
+#             continue
+
+#         price = divtag.div.span.text
+#         ws.cell(row, 6).value = float(price.replace(',', ''))
+#         logger.info('Price : %s' % ws.cell(row, 6).value)
+
+#         row += 1
+#         time.sleep(DELAY)
+
+
+def get_india_ut_prices():
+    """ Get India UT prices """
+    logger.info('Getting Indian UT prices..')
+
+    ws = wb[INUTSHEET]
+
+    row = 2
+
+    while (ws.cell(row, 2).value):
+        indiautticker = ws.cell(row, 2).value
+        logger.info('Ticker : %s' % ws.cell(row, 1).value)
+
+        yahoourl = 'https://in.finance.yahoo.com/quote/' + \
+            str(indiautticker) + '.BO?p=' + \
+            str(indiautticker) + '.BO&.tsrc=fin-srch-v1'
+
+        logger.debug('IN UT URL : %s' % yahoourl)
+
+        page = requests.get(yahoourl)
+
+        soup = BeautifulSoup(page.content, 'lxml')
+
+        try:
+            divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+
+        except Exception as e:
+            logger.exception('Index error : %s' % e)
+            row += 1
+            continue
+
+        price = divtag.div.span.text
+        ws.cell(row, 12).value = float(price.replace(',', ''))
+        logger.info('Price : %s' % ws.cell(row, 12).value)
+
+        row += 1
+        time.sleep(DELAY)
+
+
+# def get_singapore_stock_prices():
+#     """ Get Singapore stock prices """
+#     logger.info('Getting Singapore stock prices..')
+
+#     ws = wb[SGSHEET]
+
+#     row = 2
+
+#     while (ws.cell(row, 2).value):
+#         sgticker = ws.cell(row, 2).value
+#         logger.info('SG Ticker : %s' % sgticker)
+
+#         sgtickerurl = 'https://finance.yahoo.com/quote/' + sgticker + \
+#             '?p=' + sgticker + '&.tsrc=fin-srch'
+
+#         logger.debug('SG Stock URL : %s' % sgtickerurl)
+
+#         page = requests.get(sgtickerurl)
+
+#         soup = BeautifulSoup(page.content, 'lxml')
+
+#         divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+#         price = divtag.div.span.text
+
+#         ws.cell(row, 8).value = float(price)
+#         logger.info('Price : %s' % ws.cell(row, 8).value)
+#         row += 1
+
+
 def get_singapore_ut_prices():
     """ Get Singapore UT price """
-    logger.info('\nGetting SG UT price..')
+    logger.info('Getting SG UT price..')
 
     ws = wb[SGUTSHEET]
 
@@ -348,12 +499,41 @@ def get_singapore_ut_prices():
     price = panel.next_element.next_element.text
 
     ws['L2'].value = float(price)
-    logger.info('Infinity US 500 Stock Index Fund SGD Price : %s' % ws['L2'].value)
+    logger.info('UT Price : %s' % ws['L2'].value)
+
+
+# def get_us_stock_prices():
+#     """ Get US stock prices """
+#     logger.info('Getting US stock prices..')
+
+#     ws = wb[USSHEET]
+
+#     row = 2
+
+#     while (ws.cell(row, 2).value):
+#         usticker = ws.cell(row, 2).value
+#         logger.info('US stock ticker : %s' % usticker)
+
+#         ustickerurl = 'https://finance.yahoo.com/quote/' + usticker + \
+#             '?p=' + usticker + '&.tsrc=fin-srch'
+
+#         page = requests.get(ustickerurl)
+
+#         soup = BeautifulSoup(page.content, 'lxml')
+
+#         divtag = soup.find('div', class_='My(6px) Pos(r) smartphone_Mt(6px)')
+#         price = divtag.div.span.text
+
+#         ws.cell(row, 9).value = float(price)
+#         logger.info('Price : %s' % ws.cell(row, 9).value)
+
+#         row += 1
+#         time.sleep(DELAY)
 
 
 def get_crypto_prices():
     """ Get Crypto prices """
-    logger.info('\nGetting Crypto prices..')
+    logger.info('Getting Crypto prices..')
 
     ws = wb[CRYPTOSHEET]
 
@@ -386,20 +566,30 @@ def get_crypto_prices():
         time.sleep(DELAY)
 
 
+def get_gold_price():
+    logger.info('Getting Gold price..')
+
+    ws = wb[GOLDSHEET]
+
+    page = requests.get(GOLDURL)
+    logger.debug('HTML : %s' % page)
+
+    soup = BeautifulSoup(page.content, 'lxml')
+    logger.debug('Soup : %s' % soup.body)
+
+    try:
+        panel = soup.find('div', {'class': 'My(6px) Pos(r) smartphone_Mt(6px)'})
+        logger.debug('Tag : %s' % panel)
+        price = panel.div.span.text.replace(',', '')
+        ws['D7'].value = float(price)
+        logger.info('Gold price: % s' % ws['D7'].value)
+
+    except Exception as e:
+        logger.exception('Gold price retrieve error : %s' % e)
+
+
 def save_fs_workbook():
     """ save workbook """
-
-    ws = wb[FSSHEET]
-
-    # Get todays date and format
-    now = datetime.now()
-
-    # format date as dd-mm-yyyy
-    dte = str(now.day) + '-' + str(now.month) + '-' + str(now.year) + ' ' + \
-        str(now.hour) + ':' + str(now.minute) + ':' + str(now.second)
-
-    ws.cell(30, 3).value = dte
-
     logger.info('Saving FS workbook..')
 
     try:
@@ -411,27 +601,79 @@ def save_fs_workbook():
 
     logger.info('Saved')
 
+def save_pb_workbook():
+    logger.info('Saving portfolio workbook..')
+
+    ws = wb[FSSHEET]
+    ws1 = wb1[PORTSHEET]
+
+    # Get todays date and format
+    now = datetime.now()
+
+    # format date as dd-mm-yyyy
+    dte = str(now.day) + '-' + str(now.month) + '-' + str(now.year)
+
+    writeflag = True
+    row = 1
+    cr = 'A' + str(row)
+    
+    while ws1[cr].value != None:
+        if ws1[cr].value == dte:
+            writeflag = False
+            break
+        else:
+            row = row + 1
+            cr = 'A' + str(row)
+
+    if writeflag:
+        ws1['A' + str(row)].value = dte
+        ws1['B' + str(row)].value = ws['C7'].value     
+        ws1['C' + str(row)].value = ws['C8'].value       
+        ws1['D' + str(row)].value = ws['C9'].value
+        ws1['E' + str(row)].value = ws['C10'].value
+        ws1['F' + str(row)].value = ws['C11'].value
+        ws1['G' + str(row)].value = ws['C12'].value
+        ws1['H' + str(row)].value = ws['C13'].value
+        ws1['I' + str(row)].value = ws['C14'].value
+        ws1['J' + str(row)].value = ws['C15'].value
+
+        try:
+            wb1.save(SOURCE1)
+
+        except Exception as e:
+            logger.exception('Workbook save error : %s' % e)
+            quit()
+
+        logger.info('Portfolio Bal Saved')
+
 
 if __name__ == '__main__':
     logger = setup_logger()
-    
     check_file_exists(SOURCE)
-    
+    ## check_file_exists(SOURCE1)
     backup_input_file()
 
+    ## querydte = get_query_date()
+
     wb = load_fs_workbook()
+    ## wb1 = load_pb_workbook()
 
     get_forex_rates()
 
-    get_security_price_from_yahoo('EQ', 'US', USSHEET, 2, 9)
-    get_security_price_from_yahoo('CO', 'US', GOLDSHEET, 2, 8)
+    get_security_price_from_yahoo('EQ', 'IN', INSHEET, 2, 'https://in.finance.yahoo.com/quote/','div', 'My(6px) Pos(r) smartphone_Mt(6px)', 6)
+    get_security_price_from_yahoo('UT', 'IN', INUTSHEET, 2, 'https://in.finance.yahoo.com/quote/','div', 'My(6px) Pos(r) smartphone_Mt(6px)', 12)
+    # get_india_stock_prices()
+    # get_india_ut_prices()
 
-    get_security_price_from_yahoo('EQ', 'IN', INSHEET, 2, 6)
-    get_security_price_from_yahoo('UT', 'IN', INUTSHEET, 2, 12)
-    
-    get_security_price_from_yahoo('EQ', 'SG', SGSHEET, 2, 8)
+    get_security_price_from_yahoo('EQ', 'SG', SGSHEET, 2, 'https://sg.finance.yahoo.com/quote/','div', 'My(6px) Pos(r) smartphone_Mt(6px)', 8)
+    # get_singapore_stock_prices()
     get_singapore_ut_prices()
 
+    get_security_price_from_yahoo('EQ', 'US', USSHEET, 2, 'https://finance.yahoo.com/quote/','div', 'My(6px) Pos(r) smartphone_Mt(6px)', 9)
+    # get_us_stock_prices()
+
     get_crypto_prices()
+    get_gold_price()
 
     save_fs_workbook()
+    ## save_pb_workbook()
