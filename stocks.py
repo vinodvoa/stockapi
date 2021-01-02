@@ -603,4 +603,4 @@ if __name__ == '__main__':
     get_crypto_prices()
 
     save_fs_workbook()
-    
+
